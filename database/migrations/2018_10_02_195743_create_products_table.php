@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('description', 1000);
-            $table->integer('quantify')->unsigned();
+            $table->integer('quantity')->unsigned();
             $table->string('status')->default(Product::PRODUCT_NO_AVAILABLE);
             $table->string('image');
             $table->integer('seller_id')->unsigned();
