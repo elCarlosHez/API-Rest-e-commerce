@@ -35,4 +35,4 @@ Route::resource('sellers', 'Seller\SellerController', ['only' => ['index', 'show
 /**
  * Users
  */
-Route::resource('users', 'User\UserController', ['except' => ['index', 'show']]);
+Route::resource('users', 'User\UserController', ['only' => ['index', 'show']]);
