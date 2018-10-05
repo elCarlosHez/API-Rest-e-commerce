@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
  */
 /**
- * Buters
+ * Buyers
  */
 Route::resource('buyers', 'Buyer\BuyerController', ['only' => ['index', 'show']]);
 /**
