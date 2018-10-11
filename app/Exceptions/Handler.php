@@ -7,6 +7,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use App\Traits\ApiResponser;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -56,30 +57,24 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($exception instanceof ValidationException) {
-            $this->convertValidationExceptionToResponse($exception, $request);
+            return $this->convertValidationExceptionToResponse($exception, $request);
         }
-
         if ($exception instanceof ModelNotFoundException) {
             $modelo = strtolower(class_basename($exception->getModel()));
             return $this->errorResponse("No existe ninguna instancia de {$modelo} con el id especificado", 404);
         }
-
         if ($exception instanceof AuthenticationException) {
             return $this->unauthenticated($request, $exception);
         }
-
         if ($exception instanceof AuthorizationException) {
             return $this->errorResponse('No posee permisos para ejecutar esta acción', 403);
         }
-
         if ($exception instanceof NotFoundHttpException) {
             return $this->errorResponse('No se encontró la URL especificada', 404);
         }
-
         if ($exception instanceof MethodNotAllowedHttpException) {
             return $this->errorResponse('El método especificado en la petición no es válido', 405);
         }
-
         if ($exception instanceof HttpException) {
             return $this->errorResponse($exception->getMessage(), $exception->getStatusCode());
         }
