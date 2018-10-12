@@ -1,31 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\Category;
+namespace App\Http\Controllers\Seller;
 
-use App\Category;
+use App\Seller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 
-class CategoryBuyerController extends ApiController
+class SellerBuyerController extends ApiController
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Category $category)
+    public function index(Seller $seller)
     {
-        $buyers = $category->products()
-            // Get all transactions
+        $buyers = $seller->products()
             ->whereHas('transactions')
-            // Get buyers
             ->with('transactions.buyer')
             ->get()
-            // Just get transactions
             ->pluck('transactions')
-            // Collapse all elements
             ->collapse()
-            // Getting just buyers
             ->pluck('buyer')
             ->unique()
             ->values();
