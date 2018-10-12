@@ -23,6 +23,10 @@ class Product extends Model
         'seller_id',
     ];
 
+    protected $hidden = [
+        'pivot'
+    ];
+
     protected $dates = ['deleted_at'];
 
     public function isAvailable()
@@ -37,7 +41,7 @@ class Product extends Model
 
     public function transactions()
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Transaction::class);
     }
 
     public function categories()
