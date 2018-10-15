@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Seller;
 use App\Buyer;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Transformers\TransactionsTransformer;
 
 class Transaction extends Model
 {
     use SoftDeletes;
 
+    public $transformer = TransactionsTransformer::class;
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'quantity',
