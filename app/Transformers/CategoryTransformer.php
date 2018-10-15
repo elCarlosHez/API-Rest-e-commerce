@@ -16,11 +16,25 @@ class CategoryTransformer extends TransformerAbstract
     {
         return [
             'identificador' => (int)$category->id,
-            'Titulo' => (string)$category->nombre,
-            'Detalles' => (string)$category->description,
+            'titulo' => (string)$category->name,
+            'detalles' => (string)$category->description,
             'frechaCreacion' => (string)$category->created_at,
             'frechaActualizacion' => (string)$category->updated_at,
             'frechaEliminacion' => isset($category->deleted_at) ? (string)$category->deleted_at : null,
         ];
+    }
+
+    public static function originalAttribute($index)
+    {
+        $attributes = [
+            'identificador' => 'id',
+            'titulo' => 'name',
+            'detalles' => 'description',
+            'frechaCreacion' => 'created_at',
+            'frechaActualizacion' => 'updated_at',
+            'frechaEliminacion' => 'deleted_at',
+        ];
+
+        return isset($attributes[$index]) ? $attributes[$index] : null;
     }
 }

@@ -24,4 +24,19 @@ class TransactionsTransformer extends TransformerAbstract
             'frechaEliminacion' => isset($transaction->deleted_at) ? (string)$transaction->deleted_at : null,
         ];
     }
+
+    public static function originalAttribute($index)
+    {
+        $attributes = [
+            'identificador' => 'id',
+            'cantidad' => 'quantity',
+            'comprador' => 'buyer_id',
+            'producto' => 'product_id',
+            'frechaCreacion' => 'created_at',
+            'frechaActualizacion' => 'updated_at',
+            'frechaEliminacion' => 'deleted_at',
+        ];
+
+        return isset($attributes[$index]) ? $attributes[$index] : null;
+    }
 }
