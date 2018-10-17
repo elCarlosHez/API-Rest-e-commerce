@@ -2,8 +2,8 @@
 
 namespace App\Transformers;
 
-use League\Fractal\TransformerAbstract;
 use App\Buyer;
+use League\Fractal\TransformerAbstract;
 
 class BuyerTransformer extends TransformerAbstract
 {
@@ -19,24 +19,49 @@ class BuyerTransformer extends TransformerAbstract
             'nombre' => (string)$buyer->name,
             'correo' => (string)$buyer->email,
             'esVerificado' => (int)$buyer->verified,
-            'frechaCreacion' => (string)$buyer->created_at,
-            'frechaActualizacion' => (string)$buyer->updated_at,
-            'frechaEliminacion' => isset($buyer->deleted_at) ? (string)$buyer->deleted_at : null,
+            'fechaCreacion' => (string)$buyer->created_at,
+            'fechaActualizacion' => (string)$buyer->updated_at,
+            'fechaEliminacion' => isset($buyer->deleted_at) ? (string)$buyer->deleted_at : null,
+            'links' => [
+                [
+                    'rel' => 'self',
+                    'href' => route('buyers.show', $buyer->id)
+                ],
+                [
+                    'rel' => 'buyer.categories',
+                    'href' => route('buyers.categories.index', $buyer->id)
+                ],
+                [
+                    'rel' => 'buyer.products',
+                    'href' => route('buyers.products.index', $buyer->id)
+                ],
+                [
+                    'rel' => 'buyer.sellers',
+                    'href' => route('buyers.sellers.index', $buyer->id)
+                ],
+                [
+                    'rel' => 'buyers.transactions',
+                    'href' => route('buyers.transactions.index', $buyer->id)
+                ],
+                [
+                    'rel' => 'user',
+                    'href' => route('users.show', $buyer->id)
+                ],
+            ]
         ];
     }
-
     public static function originalAttribute($index)
     {
         $attributes = [
             'identificador' => 'id',
             'nombre' => 'name',
-            'correo' => 'correo',
+            'correo' => 'email',
             'esVerificado' => 'verified',
-            'frechaCreacion' => 'created_at',
-            'frechaActualizacion' => 'updated_at',
-            'frechaEliminacion' => 'deleted_at',
+            'fechaCreacion' => 'created_at',
+            'fechaActualizacion' => 'updated_at',
+            'fechaEliminacion' => 'deleted_at',
         ];
-
         return isset($attributes[$index]) ? $attributes[$index] : null;
     }
+
 }
