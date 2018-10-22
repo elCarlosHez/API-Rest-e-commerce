@@ -14,6 +14,7 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Illuminate\Foundation\Testing\HttpException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
+use Illuminate\Session\TokenMismatchException;
 
 class Handler extends ExceptionHandler
 {
@@ -87,9 +88,15 @@ class Handler extends ExceptionHandler
                 return $this->errorResponse('No se puede eliminar de forma permanente el recurso porque está relacionado con algún otro.', 409);
             }
         }
+
         if ($exception instanceof ThrottleRequestsException) {
             return $this->errorResponse('Se ha excedido el número de peticiones por minuto.', 429);
         }
+
+        if ($exception instanceof TokenMismatchException) {
+            return redirect()->back()->withInput($request->input());
+        }
+
         if (!config('app.debug')) {
             return $this->errorResponse('Falla inesperada. Intente de nuevo', 500);
         }
@@ -106,6 +113,11 @@ class Handler extends ExceptionHandler
     protected function convertValidationExceptionToResponse($e, $request)
     {
         $errors = $e->validator->errors()->getMessages();
+
+        if ($this->isFronted($request)) {
+            return $request->ajax() ? response()->json($errors, 422) : redirect()->back()->withInput($request->input())->withErrors($errors);
+        }
+
         return $this->errorResponse($errors, 422);
     }
 
@@ -118,6 +130,14 @@ class Handler extends ExceptionHandler
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
+        if ($this->isFronted($request)) {
+            return redirect()->guest('login');
+        }
         return $this->errorResponse('No autenticado', 401);
+    }
+
+    private function isFronted($request)
+    {
+        return $request->acceptsHtml() && collect($request->route()->middleware())->contains('web');
     }
 }
