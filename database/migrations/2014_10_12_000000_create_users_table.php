@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->string('verified')->default(User::VERIFIED_USER);
             $table->string('verification_token')->nullable();
+            $table->string('api_token')->nullable();
             $table->string('admin')->default(User::ADMIN_USER);
             $table->timestamps();
             $table->softDeletes();
