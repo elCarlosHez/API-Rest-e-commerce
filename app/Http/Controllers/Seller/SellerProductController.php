@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Seller;
-use Illuminate\Http\Request;
-use App\Http\Controllers\ApiController;
 use App\Product;
 use App\User;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Http\Request;
+use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpKernel\HttpCache\Store;
 use App\Transformers\ProductTransformer;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SellerProductController extends ApiController
 {
@@ -19,6 +18,9 @@ class SellerProductController extends ApiController
         parent::__construct();
         $this->middleware('transform.input:' . ProductTransformer::class)
             ->only(['store', 'update']);
+        $this->middleware('scope:manage-products')->except('index');
+
+
     }
     /**
      * Display a listing of the resource.
@@ -27,8 +29,11 @@ class SellerProductController extends ApiController
      */
     public function index(Seller $seller)
     {
-        $products = $seller->products;
-        return $this->showAll($products);
+        if (request()->user()->tokenCan('read-general') || request()->user()->tokenCan('manage-products')) {
+            $products = $seller->products;
+            return $this->showAll($products);
+        }
+        $this->middleware('scope:manage-products')->except('index');
     }
 
     /**
