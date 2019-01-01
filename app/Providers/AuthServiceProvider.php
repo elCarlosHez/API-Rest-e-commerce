@@ -7,7 +7,9 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Laravel\Passport\Passport;
 use Illuminate\Support\Carbon;
 use App\Buyer;
+use App\Seller;
 use App\Policies\BuyerPolicy;
+use App\Policies\SellerPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -18,6 +20,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Buyer::class => BuyerPolicy::class,
+        Seller::class => SellerPolicy::class,
     ];
 
     /**
