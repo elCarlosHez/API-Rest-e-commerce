@@ -14,6 +14,7 @@ class TransactionController extends ApiController
         parent::__construct();
 
         $this->middleware('scope:read-general')->only('index');
+        $this->middleware('can:view,transaction')->only('show');
     }
     /**
      * Display a listing of the resource.
@@ -22,6 +23,8 @@ class TransactionController extends ApiController
      */
     public function index()
     {
+        $this->allowAdminAction();
+        
         $transactions = Transaction::all();
 
         return $this->showAll($transactions);

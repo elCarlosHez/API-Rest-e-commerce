@@ -8,8 +8,10 @@ use Laravel\Passport\Passport;
 use Illuminate\Support\Carbon;
 use App\Buyer;
 use App\Seller;
+use App\User;
 use App\Policies\BuyerPolicy;
 use App\Policies\SellerPolicy;
+use App\Policies\UserPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,9 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Buyer::class => BuyerPolicy::class,
         Seller::class => SellerPolicy::class,
+        User::class => UserPolicy::class,
+        Transaction::class => TransactionPolicy::class,
+        Product::class => ProductPolicy::class,
     ];
 
     /**
@@ -32,7 +37,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        $this->registerPolicies();
+        Gate::define('admin-action', function ($user)
+        {
+            return $user->isAdmin();
+        });
+
         Passport::routes();
 
         Passport::tokensExpireIn(Carbon::now()->addMinutes(5));

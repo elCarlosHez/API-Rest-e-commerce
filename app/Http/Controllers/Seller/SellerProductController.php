@@ -50,15 +50,15 @@ class SellerProductController extends ApiController
             'name' => 'required',
             'description' => 'required',
             'quantity' => 'required|integer|min:1',
-            'image' => 'required|image',
+            'imagen' => 'required|image',
         ];
-
+        
         $this->validate($request, $rules);
-
+        
         $data = $request->all();
 
         $data['status'] = Product::PRODUCT_NO_AVAILABLE;
-        $data['image'] = $request->image->store('');
+        $data['image'] = $request->imagen->store('');
         $data['seller_id'] = $seller->id;
 
         $product = Product::create($data);

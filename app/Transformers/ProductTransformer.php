@@ -72,7 +72,7 @@ class ProductTransformer extends TransformerAbstract
             'description' => 'detalles',
             'quantity' => 'disponibles',
             'status' => 'estado',
-            'image' => 'imagen',
+            'imagen' => 'image',
             'seller_id' => 'vendedor',
             'created_at' => 'frechaCreacion',
             'updated_at' => 'frechaActualizacion',
